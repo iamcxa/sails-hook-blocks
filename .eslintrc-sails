@@ -1,0 +1,19 @@
+{
+  "globals": {
+    "Promise": true,
+    "sails": true,
+    "_": true,
+    "async": true,
+    "AuthHelper": true,
+    "SpecHelper": true,
+    "SeedHelper": true,
+    "HookHelper": true,
+    "ConfigHelper": true,
+    "UtilHelper": true,
+    "PassportHelper": true,
+    "ValidatorHelper": true,
+    "VerifyHelper": true,
+    "MESSAGE": true,
+    "passport": true
+  }
+}

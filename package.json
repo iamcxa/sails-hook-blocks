@@ -1,0 +1,67 @@
+{
+  "name": "sails-hook-blocks",
+  "version": "0.1.2",
+  "description": "A Sails Micro-app architecture framework",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Kent Chen",
+    "email": "iamcxa@gmail.com",
+    "url": "http://iamcxa.me/"
+  },
+  "keywords": [
+    "sails",
+    "sails.js",
+    "sails-hook",
+    "loader",
+    "mvc",
+    "hook",
+    "project",
+    "micro-apps",
+    "blacksails",
+    "blocks",
+    "framework"
+  ],
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --max-warnings=0 --report-unused-disable-directives './' && echo '✔  Your .js files look good.'",
+    "lint-fix": "./node_modules/.bin/eslint --max-warnings=0 --report-unused-disable-directives --fix './' && echo '✔  Your .js files look good.'",
+    "prepublishOnly": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamcxa/sails-framework-blacksails"
+  },
+  "devDependencies": {
+    "@sailshq/eslint": "^4.19.3",
+    "chai": "^4.2.0",
+    "chai-datetime": "^1.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^5.2.0",
+    "sails": "^1.1.0",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "ajv": "^6.6.2",
+    "app-root-path": "^2.1.0",
+    "bcrypt": "^3.0.3",
+    "compact-timezone-list": "^1.0.6",
+    "faker": "^4.1.0",
+    "install": "^0.12.2",
+    "joi": "^14.3.0",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "sails-util-micro-apps": "git+https://github.com/MoreAppio/sails-util-micro-apps.git",
+    "shortid": "^2.2.13",
+    "sinon": "^7.0.0",
+    "tracer": "^0.9.1",
+    "validator": "^10.9.0"
+  },
+  "sails": {
+    "isHook": true
+  }
+}

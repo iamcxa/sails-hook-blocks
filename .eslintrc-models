@@ -1,0 +1,15 @@
+{
+  "globals": {
+    "Config": true,
+    "Dataset": true,
+    "Group": true,
+    "GroupRole": true,
+    "MenuIem": true,
+    "Passport": true,
+    "Role": true,
+    "RoleMenuItem": true,
+    "User": true,
+    "UserRole": true,
+    "Resource": true
+  }
+}
