@@ -399,10 +399,19 @@ const theValidator = {
     options,
     callback,
   }) {
+    console.log('options=>', options);
+    const funcSchema = _.isObject(options)
+      ? Joi
+        .object()
+        .options(options)
+        .keys(schema(Joi))
+      : Joi
+        .object()
+        .keys(schema(Joi));
     return Joi.validate(
       value,
       _.isFunction(schema)
-        ? Joi.object().keys(schema(Joi))
+        ? funcSchema
         : schema,
       options,
       callback,
