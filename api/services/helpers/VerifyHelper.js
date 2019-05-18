@@ -399,7 +399,6 @@ const theValidator = {
     options,
     callback,
   }) {
-    console.log('options=>', options);
     const funcSchema = _.isObject(options)
       ? Joi
         .object()
