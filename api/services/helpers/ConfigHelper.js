@@ -155,7 +155,7 @@ module.exports = {
   },
 
   getBaseUrl() {
-    return sails.config.appUrl;
+    return sails.config.baseUrl;
   },
 
   getDefualtVuePath() {
@@ -221,7 +221,7 @@ module.exports = {
         envConfig = require(`${appRootPath}/${configDevPath}`);
       } else {
         delete localConfig.port;
-        delete localConfig.appUrl;
+        delete localConfig.baseUrl;
         delete localConfig.environment;
         envConfig = require(`${appRootPath}/${configTestPath}`);
       }
