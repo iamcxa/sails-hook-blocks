@@ -16,7 +16,7 @@ module.exports = async function sessionAuth(req, res, next) {
     const session = AuthHelper.getSessionUser(req);
     // console.log('sessionAuth session=>', session);
     if (session) {
-      const user = await User.findById(session.id);
+      const user = await User.findByPk(session.id);
       // console.log('sessionAuth user=>', user);
       if (!user) {
         return res.forbidden(MESSAGE.ERROR.NO_USER_LOGIN());
