@@ -176,6 +176,7 @@ module.exports = {
         url = resetPasswordRedirect,
         token = null,
         password = null,
+        verify = null,
       } = req.allParams();
 
       const inputHasNull = ValidatorHelper.checkNull({
@@ -196,6 +197,9 @@ module.exports = {
         throw Error(MESSAGE.ERROR.UTIL.USER_NOT_FOUND);
       }
       user.tokenResetPassword = null;
+      if (verify) {
+        user.isConfirmed = true;
+      }
       await user.save();
       await User.setPassword(user.id, password);
 
