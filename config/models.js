@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import shortid from 'shortid';
+import { isEmpty } from 'lodash';
 
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-');
 shortid.seed(2589);
@@ -57,18 +58,20 @@ module.exports.models = {
       },
 
       /**
-       * 依據 userId 找出特定 user 之 passports 資料。
+       * 依據 userId 找出特定 user 之 local passport 資料。
+       * (只找 local provider)
        * @param {number|string} userId
        * @returns {Object.<Sequelize>} SequelizeInstance passport
        */
-      async findByUserId(userId) {
+      async findLocalByUserId(userId) {
         try {
-          const passport = await Passport.findOne({
+          const passports = await Passport.findOne({
             where: {
+              provider: 'local',
               UserId: userId,
             },
           });
-          return passport;
+          return passports;
         } catch (e) {
           throw e;
         }
@@ -89,13 +92,15 @@ module.exports.models = {
           if (inputHasNull) {
             throw Error(MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER({ inputHasNull }));
           }
-          const passport = await Passport.findByUserId(userId);
-          if (!passport || passport.provider !== 'local') {
+          const passport = await Passport.findLocalByUserId(userId);
+          if (!passport) {
             const user = await User.findById(userId);
-            throw Error(MESSAGE.AUTH.USER_PASSWORD_NOT_SET({
+            sails.log.warn((MESSAGE.AUTH.USER_PASSWORD_NOT_SET({
               username: user.username,
-            }));
+            })));
+            return false;
           }
+          console.log('passport=>', passport);
           if (passport) {
             const isPasswordValid = await passport.validatePassword(password);
             return isPasswordValid;
@@ -121,7 +126,7 @@ module.exports.models = {
           .filter(r => authorities
             .some(a => a.toLowerCase() === r)).length === authorities.length;
         if (isQualified) {
-          sails.log(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
+          sails.log.info(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
         } else {
           sails.log.warn(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
         }
@@ -218,7 +223,10 @@ module.exports.models = {
       async setPassword(userId, newPassword) {
         try {
           let passport = await Passport.findOne({
-            where: { UserId: userId },
+            where: {
+              provider: 'local',
+              UserId: userId,
+            },
           });
           if (!passport) {
             sails.log.warn(`User id "${userId}" has no default local password, so create a new one for it.`);
