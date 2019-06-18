@@ -166,7 +166,7 @@ module.exports = {
   },
 
   async ResetPassword(req, res) {
-    sails.log('=== API:AuthContoller:ResetPassword ===');
+    sails.log('=== API:AuthController:ResetPassword ===');
     try {
       const {
         resetPasswordRedirect,
