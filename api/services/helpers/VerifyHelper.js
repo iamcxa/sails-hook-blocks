@@ -48,7 +48,9 @@ const theValidator = {
    * @returns {boolean} verification result
    */
   async isModelColumn(payload) {
-    sails.log.info('VerifyHelper isModelColumn payload=>\n', payload);
+    if (payload.log) {
+      sails.log.info('VerifyHelper isModelColumn payload=>\n', payload);
+    }
     try {
       if (!payload) {
         throw Error(MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER({ payload }));
