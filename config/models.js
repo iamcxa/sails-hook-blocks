@@ -100,7 +100,7 @@ module.exports.models = {
             })));
             return false;
           }
-          console.log('passport=>', passport);
+          // console.log('passport=>', passport);
           if (passport) {
             const isPasswordValid = await passport.validatePassword(password);
             return isPasswordValid;
@@ -119,16 +119,18 @@ module.exports.models = {
        * @param {Array.<String>} authorities
        * @returns {boolean} 驗證結果
        */
-      async matchRoles(id, authorities) {
+      async matchRoles(id, authorities, { log = false } = {}) {
         const user = await User.findByIdWithRole(id);
         const isQualified = user.Roles
           .map(r => r.authority.toLowerCase())
           .filter(r => authorities
             .some(a => a.toLowerCase() === r)).length === authorities.length;
-        if (isQualified) {
-          sails.log.info(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
-        } else {
-          sails.log.warn(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
+        if (log) {
+          if (isQualified) {
+            sails.log.info(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
+          } else {
+            sails.log.info(`---- check UserName "${user.username}" NOT matches "${authorities}"--> ${isQualified}`);
+          }
         }
         return isQualified;
       },
@@ -139,15 +141,17 @@ module.exports.models = {
        * @param {Array.<String>} authorities
        * @returns {boolean} 驗證結果
        */
-      async someRoles(id, authorities) {
+      async someRoles(id, authorities, { log = false } = {}) {
         const user = await User.findByIdWithRole(id);
         const isQualified = user.Roles
           .map(r => r.authority.toLowerCase())
           .filter(r => authorities.some(a => a.toLowerCase() === r)).length > 0;
-        if (isQualified) {
-          sails.log(`---- check UserName "${user.username}" has one of ["${authorities}"]--> ${isQualified}`);
-        } else {
-          sails.log.warn(`---- check UserName "${user.username}" has one of ["${authorities}"]--> ${isQualified}`);
+        if (log) {
+          if (isQualified) {
+            sails.log(`---- check UserName "${user.username}" has one of ["${authorities}"]--> ${isQualified}`);
+          } else {
+            sails.log.info(`---- check UserName "${user.username}" has NO one of ["${authorities}"]--> ${isQualified}`);
+          }
         }
         return isQualified;
       },
@@ -280,7 +284,7 @@ module.exports.models = {
             }],
             // order: ['MenuItem.order', 'SubMenuItems.order'],
           });
-          console.log('menuItems=>', menuItems);
+          // console.log('menuItems=>', menuItems);
           return menuItems;
         } catch (e) {
           sails.log.error('menuItem findAllWithSubMenu error=>', e);
