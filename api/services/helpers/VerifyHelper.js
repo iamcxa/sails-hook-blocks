@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import Validator from 'validator';
 import Joi from 'joi';
+import Validator from 'validator';
+import _ from 'lodash';
 import jsonValidator from './lib/jsonValidator';
 
 const vAllowSymbol = (payload, symbols) => {
@@ -432,11 +432,13 @@ const theValidator = {
     };
   },
 
-  getJoiRequiredSchemaByKey({ schema, requiredKeys }) {
+  getJoiRequiredSchemaByKey({ schema, requiredKeys = [] }) {
     const schemaWithRequiredKeys = Object.assign({}, schema);
-    requiredKeys.forEach((e) => {
-      schemaWithRequiredKeys[e] = schema[e].required();
-    });
+    if (requiredKeys && requiredKeys.length > 0) {
+      requiredKeys.forEach((e) => {
+        schemaWithRequiredKeys[e] = schema[e].required();
+      });
+    }
     // console.log('scheme=>', schema);
     return schemaWithRequiredKeys;
   },

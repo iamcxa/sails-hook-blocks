@@ -5,8 +5,8 @@
  * lastUpdater: Kent
  */
 import _ from 'lodash';
-import fs from 'fs';
 import flat from 'flattenjs';
+import fs from 'fs';
 // import appRootPath from 'app-root-path';
 
 const appRootPath = sails.config.appPath;

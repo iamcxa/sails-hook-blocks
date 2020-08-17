@@ -1,6 +1,6 @@
-import timezoneList from 'compact-timezone-list';
 import _ from 'lodash';
 import faker from 'faker';
+import timezoneList from 'compact-timezone-list';
 
 module.exports = {
   /**
