@@ -1,7 +1,7 @@
 /* eslint-disable no-continue */
 import _ from 'lodash';
-import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 import passport from 'passport';
 
 const AuthService = {
@@ -46,6 +46,7 @@ const AuthService = {
     return jwt.sign(
       {
         id: user.id,
+        username: user.username,
         deviceToken,
       },
       secret,
