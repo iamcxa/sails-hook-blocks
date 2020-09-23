@@ -45,7 +45,7 @@
   "dependencies": {
     "ajv": "^6.6.2",
     "app-root-path": "^2.1.0",
-    "bcrypt": "^3.0.3",
+    "bcrypt": "^5.0.0",
     "compact-timezone-list": "^1.0.6",
     "faker": "^4.1.0",
     "install": "^0.12.2",
