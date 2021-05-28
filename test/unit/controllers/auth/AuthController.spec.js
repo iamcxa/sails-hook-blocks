@@ -30,7 +30,7 @@ describe('about AuthController operations.', () => {
       [adminUser] = await SeedHelper.create({
         size: 1,
         model: User,
-        data: i => ({
+        data: (i) => ({
           username: `just.admin.user.${i + 1}`,
           email: `just.admin.user.${i + 1}@gmail.com`,
           isActivated: true,
@@ -42,13 +42,13 @@ describe('about AuthController operations.', () => {
         }),
         include: [Passport],
       });
-      const target = await User.findById(adminUser.id);
+      const target = await User.findByPk(adminUser.id);
       await target.addRole(adminRole);
       // create users: an User.
       [normalUser] = await SeedHelper.create({
         size: 1,
         model: User,
-        data: i => ({
+        data: (i) => ({
           username: `just.user.${i + 1}`,
           email: `just.user.${i + 1}@gmail.com`,
           isActivated: true,
@@ -76,7 +76,7 @@ describe('about AuthController operations.', () => {
         adminUsers = await SeedHelper.create({
           size: 3,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `admin.${i + 1}`,
             email: `admin${i + 1}@gmail.com`,
             isActivated: true,
@@ -91,7 +91,7 @@ describe('about AuthController operations.', () => {
         [notActivatedAdminUser] = await SeedHelper.create({
           size: 1,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `admin.not.activated.${i + 1}`,
             email: `admin.not.activated.${i + 1}@gmail.com`,
             isActivated: false,
@@ -106,7 +106,7 @@ describe('about AuthController operations.', () => {
         [wrongPasswordAdminUser] = await SeedHelper.create({
           size: 1,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `admin.wrong.password.${i + 1}`,
             email: `admin.wrong.password.${i + 1}@gmail.com`,
             isActivated: true,
@@ -121,7 +121,7 @@ describe('about AuthController operations.', () => {
         [noPasswordAdminUser] = await SeedHelper.create({
           size: 1,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `admin.no.password.${i + 1}`,
             email: `admin.no.password.${i + 1}@gmail.com`,
             isActivated: true,
@@ -133,7 +133,7 @@ describe('about AuthController operations.', () => {
           noPasswordAdminUser,
         ])) {
           // console.log.log('admin=>', admin);
-          const target = await User.findById(admin.id);
+          const target = await User.findByPk(admin.id);
           await target.addRole(adminRole);
         }
       } catch (e) {
@@ -161,7 +161,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== admin login ========');
-      await Promise.all(adminUsers.map(user => test(user)));
+      await Promise.all(adminUsers.map((user) => test(user)));
       // console.log('======== admin login ========');
     });
 
@@ -194,7 +194,7 @@ describe('about AuthController operations.', () => {
         result.body.data.should.be.an('object');
       };
       // console.log('======== admin login ========');
-      await Promise.all(adminUsers.map(user => test(user)));
+      await Promise.all(adminUsers.map((user) => test(user)));
       // console.log('======== admin login ========');
     });
 
@@ -218,8 +218,8 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== Wrong password login ========');
-      await Promise.all([wrongPasswordAdminUser].map(user => test(user)));
-      const loginFailedUser = await User.findById(wrongPasswordAdminUser.id);
+      await Promise.all([wrongPasswordAdminUser].map((user) => test(user)));
+      const loginFailedUser = await User.findByPk(wrongPasswordAdminUser.id);
       loginFailedUser.lastLoginFailedCount.should.be.equal(1);
       // console.log('======== Wrong password login ========');
     });
@@ -245,7 +245,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== Wrong password login ========');
-      await Promise.all(adminUsers.map(user => test(user)));
+      await Promise.all(adminUsers.map((user) => test(user)));
       // console.log('======== Wrong password login ========');
     });
 
@@ -269,7 +269,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== Wrong password login ========');
-      await Promise.all([noPasswordAdminUser].map(user => test(user)));
+      await Promise.all([noPasswordAdminUser].map((user) => test(user)));
       // console.log('======== Wrong password login ========');
     });
 
@@ -293,7 +293,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== suspended user login ========');
-      await Promise.all([notActivatedAdminUser].map(user => test(user)));
+      await Promise.all([notActivatedAdminUser].map((user) => test(user)));
       // console.log('======== suspended user login ========');
     });
 
@@ -312,11 +312,13 @@ describe('about AuthController operations.', () => {
         result.body.isAuthenticated.should.be.equal(false);
         should.not.exist(result.body.Authorization);
         result.body.should.be.an('object');
-        const { message } = JSON.parse(MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER());
+        const { message } = JSON.parse(
+          MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER(),
+        );
         result.body.message.should.be.equal(message);
       };
       // console.log('======== No input password login ========');
-      await Promise.all(adminUsers.map(user => test(user)));
+      await Promise.all(adminUsers.map((user) => test(user)));
       // console.log('======== No input password login ========');
     });
 
@@ -340,7 +342,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== No input password login ========');
-      await Promise.all([normalUser].map(user => test(user)));
+      await Promise.all([normalUser].map((user) => test(user)));
       // console.log('======== No input password login ========');
     });
   });
@@ -357,7 +359,7 @@ describe('about AuthController operations.', () => {
         normalUsers = await SeedHelper.create({
           size: 3,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `user.${i + 1}`,
             email: `user${i + 1}@gmail.com`,
             isActivated: true,
@@ -372,7 +374,7 @@ describe('about AuthController operations.', () => {
         [notActivatedUser] = await SeedHelper.create({
           size: 1,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `user.not.activated.${i + 1}`,
             email: `user.not.activated.${i + 1}@gmail.com`,
             isActivated: false,
@@ -387,7 +389,7 @@ describe('about AuthController operations.', () => {
         [wrongPasswordUser] = await SeedHelper.create({
           size: 1,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `user.wrong.password.${i + 1}`,
             email: `user.wrong.password.${i + 1}@gmail.com`,
             isActivated: true,
@@ -402,7 +404,7 @@ describe('about AuthController operations.', () => {
         [noPasswordUser] = await SeedHelper.create({
           size: 1,
           model: User,
-          data: i => ({
+          data: (i) => ({
             username: `user.no.password.${i + 1}`,
             email: `user.no.password.${i + 1}@gmail.com`,
             isActivated: true,
@@ -433,7 +435,7 @@ describe('about AuthController operations.', () => {
         result.body.data.user.id.should.be.equal(user.id);
       };
       // console.log('======== Normal login ========');
-      await Promise.all(normalUsers.map(user => test(user)));
+      await Promise.all(normalUsers.map((user) => test(user)));
       // console.log('======== Normal login ========');
     });
 
@@ -464,7 +466,7 @@ describe('about AuthController operations.', () => {
         result.body.data.should.be.an('object');
       };
       // console.log('======== Normal login ========');
-      await Promise.all(normalUsers.map(user => test(user)));
+      await Promise.all(normalUsers.map((user) => test(user)));
       // console.log('======== Normal login ========');
     });
 
@@ -488,7 +490,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== Wrong password login ========');
-      await Promise.all(normalUsers.map(user => test(user)));
+      await Promise.all(normalUsers.map((user) => test(user)));
       // console.log('======== Wrong password login ========');
     });
 
@@ -513,7 +515,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== Wrong password login ========');
-      await Promise.all(normalUsers.map(user => test(user)));
+      await Promise.all(normalUsers.map((user) => test(user)));
       // console.log('======== Wrong password login ========');
     });
 
@@ -537,7 +539,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== Wrong password login ========');
-      await Promise.all([noPasswordUser].map(user => test(user)));
+      await Promise.all([noPasswordUser].map((user) => test(user)));
       // console.log('======== Wrong password login ========');
     });
 
@@ -561,7 +563,7 @@ describe('about AuthController operations.', () => {
         result.body.message.should.be.equal(message);
       };
       // console.log('======== suspended user login ========');
-      await Promise.all([notActivatedUser].map(user => test(user)));
+      await Promise.all([notActivatedUser].map((user) => test(user)));
       // console.log('======== suspended user login ========');
     });
 
@@ -580,11 +582,13 @@ describe('about AuthController operations.', () => {
         result.body.isAuthenticated.should.be.equal(false);
         should.not.exist(result.body.Authorization);
         result.body.should.be.an('object');
-        const { message } = JSON.parse(MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER());
+        const { message } = JSON.parse(
+          MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER(),
+        );
         result.body.message.should.be.equal(message);
       };
       // console.log('======== No input password login ========');
-      await Promise.all(normalUsers.map(user => test(user)));
+      await Promise.all(normalUsers.map((user) => test(user)));
       // console.log('======== No input password login ========');
     });
   });
@@ -592,8 +596,7 @@ describe('about AuthController operations.', () => {
   describe('about Normal User Register operations.', () => {
     let userWillBeRegister;
 
-    before('Before test normal user register operations', async () => {
-    });
+    before('Before test normal user register operations', async () => {});
 
     it('Normal user register should success', async () => {
       // console.log('======== Normal user register ========');
@@ -626,15 +629,18 @@ describe('about AuthController operations.', () => {
         username: faker.internet.userName(),
         password: faker.internet.password(),
       };
-      await User.create({
-        ...userData,
-        Passports: {
-          provider: 'local',
-          password: userData.password,
+      await User.create(
+        {
+          ...userData,
+          Passports: {
+            provider: 'local',
+            password: userData.password,
+          },
         },
-      }, {
-        include: [Passport],
-      });
+        {
+          include: [Passport],
+        },
+      );
       // console.log('======== Normal user duplicated username register ========');
       const result = await request(sails.hooks.http.app)
         .post(`/${apiPrefix}${area}${version}/register/local`)
@@ -674,7 +680,9 @@ describe('about AuthController operations.', () => {
       // because the column isActivated maybe set to false as default in some condition.
       // this will effect API response 403 'user suspend'
       {
-        const theNewUser = await User.findById(registerResult.body.data.user.id);
+        const theNewUser = await User.findByPk(
+          registerResult.body.data.user.id,
+        );
         theNewUser.isActivated = true;
         theNewUser.activatedAt = new Date();
         theNewUser.isConfirmed = true;
