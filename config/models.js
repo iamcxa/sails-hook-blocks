@@ -3,7 +3,9 @@ import crypto from 'crypto';
 import shortid from 'shortid';
 import { isEmpty } from 'lodash';
 
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-');
+shortid.characters(
+  '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-',
+);
 shortid.seed(2589);
 
 /**
@@ -27,7 +29,7 @@ module.exports.models = {
   classMethods: {
     /* ------------------------------------------------------ */
     Resource: {
-      async findByKey(key) {
+      async findByPk(key) {
         const data = await Resource.findOne({
           where: {
             key,
@@ -90,14 +92,18 @@ module.exports.models = {
             password,
           });
           if (inputHasNull) {
-            throw Error(MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER({ inputHasNull }));
+            throw Error(
+              MESSAGE.BAD_REQUEST.NO_REQUIRED_PARAMETER({ inputHasNull }),
+            );
           }
           const passport = await Passport.findLocalByUserId(userId);
           if (!passport) {
-            const user = await User.findById(userId);
-            sails.log.warn((MESSAGE.AUTH.USER_PASSWORD_NOT_SET({
-              username: user.username,
-            })));
+            const user = await User.findByPk(userId);
+            sails.log.warn(
+              MESSAGE.AUTH.USER_PASSWORD_NOT_SET({
+                username: user.username,
+              }),
+            );
             return false;
           }
           // console.log('passport=>', passport);
@@ -120,16 +126,20 @@ module.exports.models = {
        * @returns {boolean} 驗證結果
        */
       async matchRoles(id, authorities, { log = false } = {}) {
-        const user = await User.findByIdWithRole(id);
-        const isQualified = user.Roles
-          .map(r => r.authority.toLowerCase())
-          .filter(r => authorities
-            .some(a => a.toLowerCase() === r)).length === authorities.length;
+        const user = await User.findByPkWithRole(id);
+        const isQualified =
+          user.Roles.map((r) => r.authority.toLowerCase()).filter((r) =>
+            authorities.some((a) => a.toLowerCase() === r),
+          ).length === authorities.length;
         if (log) {
           if (isQualified) {
-            sails.log.info(`---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`);
+            sails.log.info(
+              `---- check UserName "${user.username}" matches "${authorities}"--> ${isQualified}`,
+            );
           } else {
-            sails.log.info(`---- check UserName "${user.username}" NOT matches "${authorities}"--> ${isQualified}`);
+            sails.log.info(
+              `---- check UserName "${user.username}" NOT matches "${authorities}"--> ${isQualified}`,
+            );
           }
         }
         return isQualified;
@@ -142,15 +152,20 @@ module.exports.models = {
        * @returns {boolean} 驗證結果
        */
       async someRoles(id, authorities, { log = false } = {}) {
-        const user = await User.findByIdWithRole(id);
-        const isQualified = user.Roles
-          .map(r => r.authority.toLowerCase())
-          .filter(r => authorities.some(a => a.toLowerCase() === r)).length > 0;
+        const user = await User.findByPkWithRole(id);
+        const isQualified =
+          user.Roles.map((r) => r.authority.toLowerCase()).filter((r) =>
+            authorities.some((a) => a.toLowerCase() === r),
+          ).length > 0;
         if (log) {
           if (isQualified) {
-            sails.log(`---- check UserName "${user.username}" has one of ["${authorities}"]--> ${isQualified}`);
+            sails.log(
+              `---- check UserName "${user.username}" has one of ["${authorities}"]--> ${isQualified}`,
+            );
           } else {
-            sails.log.info(`---- check UserName "${user.username}" has NO one of ["${authorities}"]--> ${isQualified}`);
+            sails.log.info(
+              `---- check UserName "${user.username}" has NO one of ["${authorities}"]--> ${isQualified}`,
+            );
           }
         }
         return isQualified;
@@ -163,19 +178,21 @@ module.exports.models = {
        * @returns {Object} user object
        */
       async setRoles(id, authorities) {
-        const user = await User.findById(id);
+        const user = await User.findByPk(id);
 
         // console.log('model authorities=>', authorities);
-        const roleIds = await Promise.all(authorities.map(async (authority) => {
-          const role = await Role.findOne({
-            where: { authority },
-          });
-          if (role) {
-            return role.id;
-          }
-          return null;
-        }));
-        await user.setRoles(roleIds.filter(e => e !== null));
+        const roleIds = await Promise.all(
+          authorities.map(async (authority) => {
+            const role = await Role.findOne({
+              where: { authority },
+            });
+            if (role) {
+              return role.id;
+            }
+            return null;
+          }),
+        );
+        await user.setRoles(roleIds.filter((e) => e !== null));
         // await user.setRoles(authorities);
         return user;
       },
@@ -187,7 +204,7 @@ module.exports.models = {
        */
       async loginFail(id) {
         try {
-          const user = await User.findById(id);
+          const user = await User.findByPk(id);
           if (!user) {
             throw Error(MESSAGE.BAD_REQUEST.NO_TARGET_FOUNDED({ id }));
           }
@@ -202,16 +219,16 @@ module.exports.models = {
        * @param {number|string} id
        * @returns {Object} user object
        */
-      async loginSuccess({
-        id, userAgent, locales, lastLoginIP,
-      }) {
+      async loginSuccess({ id, userAgent, locales, lastLoginIP }) {
         try {
-          const user = await User.findById(id);
+          const user = await User.findByPk(id);
           if (!user) {
             throw Error(MESSAGE.BAD_REQUEST.NO_TARGET_FOUNDED({ id }));
           }
           return await user.loginSuccess({
-            userAgent, locales, lastLoginIP,
+            userAgent,
+            locales,
+            lastLoginIP,
           });
         } catch (e) {
           sails.log.error(e);
@@ -233,7 +250,9 @@ module.exports.models = {
             },
           });
           if (!passport) {
-            sails.log.warn(`User id "${userId}" has no default local password, so create a new one for it.`);
+            sails.log.warn(
+              `User id "${userId}" has no default local password, so create a new one for it.`,
+            );
             passport = await Passport.create({
               provider: 'local',
               password: newPassword.trim(),
@@ -252,8 +271,8 @@ module.exports.models = {
        * @param {number|string} id
        * @returns {Object} user object
        */
-      findByIdWithRole: async (id) => {
-        // sails.log.info('findByIdWithRole id=>', id);
+      findByPkWithRole: async (id) => {
+        // sails.log.info('findByPkWithRole id=>', id);
         try {
           const result = await User.findOne({
             where: {
@@ -278,10 +297,12 @@ module.exports.models = {
           };
           const menuItems = await MenuItem.findAll({
             where,
-            include: [{
-              model: MenuItem,
-              as: 'SubMenuItems',
-            }],
+            include: [
+              {
+                model: MenuItem,
+                as: 'SubMenuItems',
+              },
+            ],
             // order: ['MenuItem.order', 'SubMenuItems.order'],
           });
           // console.log('menuItems=>', menuItems);
@@ -346,7 +367,9 @@ module.exports.models = {
             where: { UserId: this.id },
           });
           if (!passport) {
-            sails.log.warn(`User id "${this.id}" has no default local password, so create a new one for it.`);
+            sails.log.warn(
+              `User id "${this.id}" has no default local password, so create a new one for it.`,
+            );
             passport = await Passport.create({
               provider: 'local',
               password: newPassword.trim(),
@@ -375,11 +398,7 @@ module.exports.models = {
           throw e;
         }
       },
-      async loginSuccess({
-        userAgent,
-        locales,
-        lastLoginIP,
-      }) {
+      async loginSuccess({ userAgent, locales, lastLoginIP }) {
         try {
           const now = new Date();
           this.locales = locales;
@@ -387,7 +406,11 @@ module.exports.models = {
           this.lastLoginIP = lastLoginIP;
           this.lastLoginAt = now.getTime();
           this.lastLoginFailedCount = 0;
-          sails.log(`[!] User id ${this.id} login at ${now.getTime()} so record information.`);
+          sails.log(
+            `[!] User id ${
+              this.id
+            } login at ${now.getTime()} so record information.`,
+          );
           return await this.save();
         } catch (e) {
           sails.log.error(e);
@@ -419,11 +442,16 @@ module.exports.models = {
       async afterCreate(user) {
         return new Promise(async (resolve, reject) => {
           try {
-            const userRole = await Role.findOne({ where: { authority: 'user' } });
+            const userRole = await Role.findOne({
+              where: { authority: 'user' },
+            });
             if (userRole) {
               await user.addRole(userRole);
             }
-            const verifyEmailToken = crypto.randomBytes(32).toString('hex').substr(0, 32);
+            const verifyEmailToken = crypto
+              .randomBytes(32)
+              .toString('hex')
+              .substr(0, 32);
             // eslint-disable-next-line
             user.tokenVerifyEmail = verifyEmailToken;
             await user.save();
