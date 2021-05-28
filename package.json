@@ -48,6 +48,7 @@
     "bcrypt": "^5.0.0",
     "compact-timezone-list": "^1.0.6",
     "faker": "^4.1.0",
+    "flattenjs": "^2.1.2",
     "install": "^0.12.2",
     "joi": "^14.3.0",
     "jsonwebtoken": "^8.3.0",

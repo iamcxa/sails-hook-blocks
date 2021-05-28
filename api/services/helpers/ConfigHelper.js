@@ -5,7 +5,7 @@
  * lastUpdater: Kent
  */
 import _ from 'lodash';
-import flat from 'flattenjs';
+import { convert } from 'flattenjs';
 import fs from 'fs';
 // import appRootPath from 'app-root-path';
 
@@ -35,12 +35,10 @@ const parseBool = (value) => {
 
 const parseType = (value) => {
   if (_.isNil(value)) return undefined;
-  if (typeof value === 'object'
-      && value instanceof Array) {
+  if (typeof value === 'object' && value instanceof Array) {
     return 'array';
   }
-  if (typeof value === 'object'
-      && !(value instanceof Array)) {
+  if (typeof value === 'object' && !(value instanceof Array)) {
     return 'object';
   }
   if (typeof value === 'number') {
@@ -69,16 +67,16 @@ module.exports = {
     }
   },
 
-  async setAppConfig({
-    appName, key, value,
-  }) {
+  async setAppConfig({ appName, key, value }) {
     try {
       // console.log('sails.config.app=>', sails.config.app);
       if (appName && sails.config.app[appName]) {
         const appConfig = sails.config.app[appName];
         const configKeys = Object.keys(appConfig);
         if (configKeys.indexOf(key) !== -1) {
-          sails.log(`[ConfigHelper] Set Config to App Name \`${appName}\`, in \`${key}\`: \`${value}\`.`);
+          sails.log(
+            `[ConfigHelper] Set Config to App Name \`${appName}\`, in \`${key}\`: \`${value}\`.`,
+          );
           // console.log('sails.config.app[appName][key]=>', sails.config.app[appName][key]);
           sails.config.app[appName][key] = value;
           // console.log('sails.config.app[appName][key]=>', sails.config.app[appName][key]);
@@ -86,9 +84,17 @@ module.exports = {
           // return true;
           return await ConfigHelper.sync({ app: sails.config.app });
         }
-        throw Error(`Error: App config key should be one of: ${JSON.stringify(configKeys)}`);
+        throw Error(
+          `Error: App config key should be one of: ${JSON.stringify(
+            configKeys,
+          )}`,
+        );
       }
-      throw Error(`Error: App Name should be one of: ${JSON.stringify(Object.keys(sails.config.app))}`);
+      throw Error(
+        `Error: App Name should be one of: ${JSON.stringify(
+          Object.keys(sails.config.app),
+        )}`,
+      );
     } catch (e) {
       throw e;
     }
@@ -122,18 +128,21 @@ module.exports = {
       if (appName && sails.config.app[appName]) {
         return sails.config.app[appName];
       }
-      throw Error('Error: App Name should be one of: ', Object.keys(sails.config.app));
+      throw Error(
+        'Error: App Name should be one of: ',
+        Object.keys(sails.config.app),
+      );
     } catch (e) {
       throw e;
     }
   },
 
   isDropMode() {
-    return (sails.config.models.migrate === 'drop');
+    return sails.config.models.migrate === 'drop';
   },
 
   isSafeMode() {
-    return (sails.config.models.migrate === 'safe');
+    return sails.config.models.migrate === 'safe';
   },
 
   isInitTestData() {
@@ -141,17 +150,19 @@ module.exports = {
   },
 
   isProduction() {
-    return (sails.config.environment === 'production');
+    return sails.config.environment === 'production';
   },
 
   isDevelopment() {
-    return (sails.config.environment === undefined)
-        || (typeof sails.config.environment === 'undefined')
-        || (sails.config.environment === 'development');
+    return (
+      sails.config.environment === undefined ||
+      typeof sails.config.environment === 'undefined' ||
+      sails.config.environment === 'development'
+    );
   },
 
   isTesting() {
-    return (sails.config.environment === 'test');
+    return sails.config.environment === 'test';
   },
 
   getBaseUrl() {
@@ -198,9 +209,7 @@ module.exports = {
     }
   },
 
-  init: () => {
-
-  },
+  init: () => {},
 
   async sync(extraConfig) {
     sails.log.info('Syncing model config & local config');
@@ -257,20 +266,24 @@ module.exports = {
     sails.log.info('Updating sails configs');
     try {
       const modelConfig = await ConfigHelper.getModelJSONConfig();
-      sails.config = _.merge(
-        {},
-        sails.config,
-        modelConfig,
-      );
+      sails.config = _.merge({}, sails.config, modelConfig);
       // sails.emit('hook:admin-config:reloaded');
       // 把 config 寫入到 local.current.js
-      const data = `module.exports = ${JSON.stringify({
-        aws: sails.config.aws,
-        project: sails.config.project,
-        app: sails.config.app,
-        ...modelConfig,
-      }, null, 2)};`;
-      await fs.writeFileSync(`${appRootPath}/${currentConfigPath}`, data, 'utf8');
+      const data = `module.exports = ${JSON.stringify(
+        {
+          aws: sails.config.aws,
+          project: sails.config.project,
+          app: sails.config.app,
+          ...modelConfig,
+        },
+        null,
+        2,
+      )};`;
+      await fs.writeFileSync(
+        `${appRootPath}/${currentConfigPath}`,
+        data,
+        'utf8',
+      );
       return sails.config;
     } catch (e) {
       throw e;
@@ -291,9 +304,9 @@ module.exports = {
         } else if (_.isObject(data[key])) {
           // console.log('data[key]=>', data[key]);
           // let formatObject = ConfigHelper.getPath(data[key], '', []);
-          let formatObject = flat.convert(data[key]);
+          let formatObject = convert(data[key]);
           // eslint-disable-next-line no-loop-func
-          formatObject = Object.keys(formatObject).map(e => ({
+          formatObject = Object.keys(formatObject).map((e) => ({
             name: key,
             key: e,
             value: formatObject[e],
@@ -340,13 +353,18 @@ module.exports = {
         if (info.key) {
           const pathArray = info.key.split('.');
           if (pathArray.length > 0) {
-            let value = info.type === 'array' ? JSON.parse(info.value) : info.value;
+            let value =
+              info.type === 'array' ? JSON.parse(info.value) : info.value;
             if (info.type === 'boolean') {
               value = parseBool(info.value);
             } else if (info.type === 'number') {
               value = parseInt(info.value, 10);
             }
-            result[name] = ConfigHelper.arrayTOObject(result[name], pathArray, value);
+            result[name] = ConfigHelper.arrayTOObject(
+              result[name],
+              pathArray,
+              value,
+            );
           } else {
             let { value } = info;
             if (info.type === 'boolean') {
@@ -398,7 +416,13 @@ module.exports = {
           return ConfigHelper.getPath(data, path, result, allData, nowPointer);
         }
         if (_.isObject(data[key])) {
-          return ConfigHelper.getPath(data[key], `${path}${path ? '.' : ''}${key}`, result, data, key);
+          return ConfigHelper.getPath(
+            data[key],
+            `${path}${path ? '.' : ''}${key}`,
+            result,
+            data,
+            key,
+          );
         }
         const item = {
           key: `${path}${path ? '.' : ''}${key}`,
@@ -424,7 +448,10 @@ module.exports = {
   arrayTOObject: (obj, keys, value) => {
     try {
       const lastKey = keys.pop();
-      const lastObj = keys.reduce((obj, key) => obj[key] = obj[key] || {}, obj);
+      const lastObj = keys.reduce(
+        (obj, key) => (obj[key] = obj[key] || {}),
+        obj,
+      );
       lastObj[lastKey] = value;
       return obj;
     } catch (e) {
@@ -474,7 +501,9 @@ module.exports = {
       /* eslint no-await-in-loop: 0 */
       for (const item of itemArray) {
         if (!item.title) {
-          sails.log.warn(`Missing Menuitem Title founded. menu href '${item.title}' has no title('${item.title}').`);
+          sails.log.warn(
+            `Missing Menuitem Title founded. menu href '${item.title}' has no title('${item.title}').`,
+          );
         }
         let ParentMenuItemId = item.ParentMenuItemId;
         if (item.parentKey) {
@@ -497,7 +526,9 @@ module.exports = {
           ParentMenuItemId,
         });
         if (typeof item.role === 'string' && item.role !== 'admin') {
-          sails.log.info(`Menuitem's extra authority founded. menu '${item.title}' needs role '${item.role}'.`);
+          sails.log.info(
+            `Menuitem's extra authority founded. menu '${item.title}' needs role '${item.role}'.`,
+          );
           const targetRole = await Role.findOne({
             where: { authority: item.role },
           });
@@ -510,7 +541,7 @@ module.exports = {
             MenuItemId: menuItem.id,
           });
         } else if (_.isArray(item.roles)) {
-          sails.log.info('Menuitem\'s extra authority authority ARRAY founded.');
+          sails.log.info("Menuitem's extra authority authority ARRAY founded.");
           for (const role of item.roles) {
             sails.log.info(`menu '${item.title}' needs role '${role}'.`);
             const targetRole = await Role.findOne({
