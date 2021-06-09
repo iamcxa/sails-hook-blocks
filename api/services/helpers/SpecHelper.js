@@ -101,44 +101,55 @@ module.exports = {
         expect[i] = `${title[i]}${compare[i]}`;
         actual[i] = `actual: ${target[key]}(${typeof target[key]})`;
 
-        if (log) {
-          console.info(`== ${keyName[i]}`.grey, ` - ${expect[i]}`.grey, ` - ${actual[i]}`.grey);
+        const checkValue = (sourceVal, targetVal) => {
+          (typeof sourceVal).should.be.eq(typeof targetVal);
+          if (strictMode) {
+            targetVal.should.be.eql(sourceVal);
+          }
         }
-        if (_.isArray(source[key])) {
-          target[key].should.be.an('array');
-          // source/target 內的 array 裡對照的 index 皆有 object 時進行比對
-          source[key].forEach((sourceItem, i) => {
-            if (_.isObjectLike(sourceItem) && Object.keys(sourceItem).length > 0 &&
-                _.isObjectLike(target[key][i]) && Object.keys(source[key][i]).length > 0) {
-              this.validateEach({
-                source: sourceItem,
-                target: target[key][i],
-              }, {
-                strictMode,
-                log,
-              });
+
+        const checkArray = (sourceArr, targetArr) => {
+          should.exist(targetArr);
+          targetArr.should.be.an('array');
+          sourceArr.forEach((sourceArrItem, i) => {
+            // source/target 內的 array 裡對應的 index 皆存在時進行比對
+            if (!_.isUndefined(targetArr[i])) {
+              checkType(sourceArrItem, targetArr[i]);
             }
           });
-        } else if (_.isNil(source[key])) {
-          should.not.exist(target[key]);
-        } else if (_.isObjectLike(source[key]) && Object.keys(source[key]).length > 0) {
-          (typeof source[key]).should.be.eq((typeof target[key]));
-          Object.keys(target[key]).length.should.be.gt(0);
-          // source/target 內有 object 時進行比對
+        }
+
+        const checkObject = (sourceObj, targetObj) => {
+          // 有 object 時進行遞迴比對
+          (typeof sourceObj).should.be.eq((typeof targetObj));
           this.validateEach({
-            source: source[key],
-            target: target[key],
+            source: sourceObj,
+            target: targetObj,
           }, {
             strictMode,
             log,
           });
-        } else {
-          (typeof source[key]).should.be.eq((typeof target[key]));
-          if (strictMode) {
-            (target[key]).should.be.eql((source[key]));
+        }
+
+        const checkType = (sourceItem, targetItem) => {
+          if (_.isNil(sourceItem)) {
+            should.not.exist(targetItem);
+          } else if (Array.isArray(sourceItem)) {
+            checkArray(sourceItem, targetItem);
+          } else if (sourceItem instanceof Object) {
+            checkObject(sourceItem, targetItem);
+          } else {
+            checkValue(sourceItem, targetItem);
           }
         }
+
+        if (log) {
+          console.info(`== ${keyName[i]}`.grey, ` - ${expect[i]}`.grey, ` - ${actual[i]}`.grey);
+        }
+
+        checkType(source[key], target[key]);
       });
+
       return true;
     } catch (e) {
       if (!e.logger) {
