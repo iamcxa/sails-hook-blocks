@@ -136,3 +136,5 @@ test/stress/*.xls
 assets/css/importer.css
 assets/css/importer.css.map
 erd.mwb.bak
+
+.nyc_output
