@@ -100,7 +100,25 @@ describe('about SpecHelper operations.', () => {
   it('SpecHelper validateEach strictMode should success.', async () => {
     const struct = {
       a: 1,
-    }
+    };
+
+    SpecHelper.validateEach(
+      {
+        source: struct,
+        target: struct,
+      },
+      {
+        strictMode: true,
+        log: true,
+      },
+    );
+  });
+
+  it('SpecHelper validateEach strictMode array should success.', async () => {
+    const struct = {
+      a: [1, 2, 3],
+    };
+
     SpecHelper.validateEach(
       {
         source: struct,
@@ -221,7 +239,25 @@ describe('about SpecHelper operations.', () => {
     } catch (err) {
       err.message.should.be.eq('expected 2 to deeply equal 1');
     }
+
+    // strictMode array
+    try {
+      SpecHelper.validateEach(
+        {
+          source: [1, 2, 3],
+          target: [1, 2],
+        },
+        {
+          strictMode: true,
+          log: true,
+        },
+      );
+      throw new Error('unknown');
+    } catch (err) {
+      err.message.should.be.eq("expected 'number' to equal 'undefined'");
+    }
   });
+
   it('SpecHelper pruneLog validateEach throw error.', async () => {
     try {
       SpecHelper.validateEach(
@@ -289,7 +325,6 @@ describe('about SpecHelper operations.', () => {
           autoThrowError: false,
         },
       );
-      throw new Error('unknown');
     } catch (err) {
       err.message.should.be.eq("expected 'number' to equal 'undefined'");
     }
