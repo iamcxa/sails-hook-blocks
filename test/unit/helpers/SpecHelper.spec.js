@@ -129,6 +129,7 @@ describe('about SpecHelper operations.', () => {
           log: true,
         },
       );
+      throw new Error('unknown');
     } catch (err) {
       err.message.should.be.eq("expected 'number' to equal 'undefined'");
     }
@@ -149,6 +150,7 @@ describe('about SpecHelper operations.', () => {
           log: true,
         },
       );
+      throw new Error('unknown');
     } catch (err) {
       err.message.should.be.eq("expected 'number' to equal 'undefined'");
     }
@@ -169,6 +171,7 @@ describe('about SpecHelper operations.', () => {
           log: true,
         },
       );
+      throw new Error('unknown');
     } catch (err) {
       err.message.should.be.eq("expected 'number' to equal 'object'");
     }
@@ -193,6 +196,7 @@ describe('about SpecHelper operations.', () => {
           log: true,
         },
       );
+      throw new Error('unknown');
     } catch (err) {
       err.message.should.be.eq("expected 'number' to equal 'undefined'");
     }
@@ -213,8 +217,81 @@ describe('about SpecHelper operations.', () => {
           log: true,
         },
       );
+      throw new Error('unknown');
     } catch (err) {
-      err.message.should.be.eq("expected 2 to deeply equal 1");
+      err.message.should.be.eq('expected 2 to deeply equal 1');
+    }
+  });
+  it('SpecHelper pruneLog validateEach throw error.', async () => {
+    try {
+      SpecHelper.validateEach(
+        {
+          source: {
+            spec: {
+              z: 1,
+              x: 1,
+              a: {
+                b: 1,
+              },
+            },
+          },
+          target: {
+            spec: {
+              z: 1,
+              x: 1,
+              a: {
+                c: 1,
+                d: 1,
+                e: 1,
+                f: 1,
+                g: 1,
+              },
+            },
+          },
+        },
+        {
+          strictMode: true,
+          log: true,
+          pruneLog: true,
+        },
+      );
+      throw new Error('unknown');
+    } catch (err) {
+      err.message.should.be.eq("expected 'number' to equal 'undefined'");
+    }
+
+    try {
+      SpecHelper.validateEach(
+        {
+          source: {
+            z: 1,
+            x: 1,
+            a: {
+              b: 1,
+            },
+          },
+          target: {
+            z: 1,
+            x: 1,
+            a: {
+              c: 1,
+              d: 1,
+              e: 1,
+              f: 1,
+              g: 1,
+            },
+          },
+        },
+        {
+          strictMode: true,
+          log: true,
+          pruneLog: false,
+          autoThrowError: false,
+        },
+      );
+      throw new Error('unknown');
+    } catch (err) {
+      err.message.should.be.eq("expected 'number' to equal 'undefined'");
     }
   });
 });
