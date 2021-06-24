@@ -1,5 +1,4 @@
 {
-  "parser": "babel-eslint",
   "extends": [
     "airbnb-base",
     ".eslintrc-sails",
@@ -15,7 +14,8 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 8
+    "sourceType": "module",
+    "ecmaVersion": 2018
   },
 
   "rules": {
