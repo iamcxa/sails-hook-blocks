@@ -99,10 +99,20 @@ module.exports = {
         target.should.be.an('array');
         source.forEach((sourceItem, i) => {
           // source/target 內的 array 裡對應的 index 皆存在時進行比對
-          if (!_.isUndefined(target[i])) {
+          // 嚴格模式強制比對
+          if (strictMode || !_.isUndefined(target[i])) {
             errlog[i] = this.validateEach({
               source: sourceItem,
               target: target[i],
+            }, {
+              strictMode,
+              autoThrowError: false,
+            });
+          } else {
+            // 如果沒檢查到對應的結構自動拿第一個來比對
+            errlog[i] = this.validateEach({
+              source: sourceItem,
+              target: target[0],
             }, {
               strictMode,
               autoThrowError: false,
