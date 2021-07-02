@@ -69,15 +69,19 @@ module.exports = {
   /**
    * 使用 Mocha 驗證傳入的 target 中的每個元素是否等於對應 source 中元素的型別。
    * 如果驗證發生錯誤時，會輸出完整的物件與確切發生錯誤的鍵值。
-   * strictMode = true，
-   * @param {Object} {
-   *     source,
-   *     target,
-   *   } 參數
-   * @param {Object} {
-   *     strictMode = false, 可以驗證 source 與 target 是否全等於(should.be.eq)。q
-   *   } 選項
-   * @returns {boolean} spec testing result
+   *
+   * array 在檢查時如果 target 的 index 在 source 中沒有對應 index
+   * 將自動取 source 第 0 個 index 進行比對
+   *
+   * 在嚴格模式中, array 的每個 index 內容都必須與 source 對應 index 相符
+   *
+   * @param {object|array|string|number|boolean} source - 預期的資料結構
+   * @param {object|array|string|number|boolean} target - 比對的對象
+   * @param {boolean} strictMode - 嚴格模式, 將會詳細比較對象的內容
+   * @param {boolean} log - 是否輸出 log
+   * @param {boolean} autoThrowError - 是否自動拋錯
+   * @param {number} shiftWidth - log 輸出時的縮排空白數
+   * @param {boolean} pruneLog - 是否輸出精簡的 log
    */
   validateEach({
     source,
