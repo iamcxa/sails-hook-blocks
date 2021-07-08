@@ -133,8 +133,6 @@ test/stress/*.txt
 test/stress/*.xls
 .c9
 
-assets/css/importer.css
-assets/css/importer.css.map
 erd.mwb.bak
 
 .nyc_output

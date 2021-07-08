@@ -26,6 +26,7 @@
     "lint": "./node_modules/.bin/eslint --max-warnings=0 --report-unused-disable-directives './' && echo '✔  Your .js files look good.'",
     "lint-fix": "./node_modules/.bin/eslint --max-warnings=0 --report-unused-disable-directives --fix './' && echo '✔  Your .js files look good.'",
     "prepublishOnly": "",
+    "pretest": "touch config/local.js",
     "test": "NODE_ENV=test ./node_modules/.bin/nyc --require esm mocha",
     "test-travis": "NODE_ENV=travis ./node_modules/.bin/nyc --require esm mocha"
   },
