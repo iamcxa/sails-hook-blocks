@@ -101,28 +101,66 @@ module.exports = {
         expect[i] = `${title[i]}${compare[i]}`;
         actual[i] = `actual: ${target[key]}(${typeof target[key]})`;
 
+        const checkValue = (sourceVal, targetVal) => {
+          (typeof sourceVal).should.be.eq(typeof targetVal);
+          if (strictMode) {
+            targetVal.should.be.eql(sourceVal);
+          }
+        }
+
+        const checkArray = (sourceArr, targetArr) => {
+          should.exist(targetArr);
+          targetArr.should.be.an('array');
+          sourceArr.forEach((sourceArrItem, i) => {
+            // source/target 內的 array 裡對應的 index 皆存在時進行比對
+            if (!_.isUndefined(targetArr[i])) {
+              checkType(sourceArrItem, targetArr[i]);
+            }
+          });
+        }
+
+        const checkObject = (sourceObj, targetObj) => {
+          // 有 object 時進行遞迴比對
+          (typeof sourceObj).should.be.eq((typeof targetObj));
+          this.validateEach({
+            source: sourceObj,
+            target: targetObj,
+          }, {
+            strictMode,
+            log,
+          });
+        }
+
+        const checkType = (sourceItem, targetItem) => {
+          if (_.isNil(sourceItem)) {
+            should.not.exist(targetItem);
+          } else if (Array.isArray(sourceItem)) {
+            checkArray(sourceItem, targetItem);
+          } else if (sourceItem instanceof Object) {
+            checkObject(sourceItem, targetItem);
+          } else {
+            checkValue(sourceItem, targetItem);
+          }
+        }
+
         if (log) {
           console.info(`== ${keyName[i]}`.grey, ` - ${expect[i]}`.grey, ` - ${actual[i]}`.grey);
         }
-        if (_.isArray(source[key])) {
-          target[key].should.be.an('array');
-        } else if (_.isNil(source[key])) {
-          should.not.exist(target[key]);
-        } else {
-          (typeof source[key]).should.be.eq((typeof target[key]));
-          if (strictMode) {
-            (target[key]).should.be.eql((source[key]));
-          }
-        }
+
+        checkType(source[key], target[key]);
       });
+
       return true;
     } catch (e) {
-      this.logger({
-        target,
-        keyName,
-        expect,
-        actual,
-      });
+      if (!e.logger) {
+        // 只顯示第一個抓到的錯誤
+        e.logger = this.logger({
+          target,
+          keyName,
+          expect,
+          actual,
+        });
+      }
       throw e;
     }
   },
@@ -154,5 +192,6 @@ module.exports = {
     }
     console.groupEnd(key);
     console.error('\n');
+    return true;
   },
 };

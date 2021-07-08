@@ -1,13 +1,14 @@
 {
-	"extends": [
-		"airbnb-base",
-		".eslintrc-sails",
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb-base",
+    ".eslintrc-sails",
     ".eslintrc-models"
   ],
-  
-	"plugins": [
-		"import"
-	],
+
+  "plugins": [
+    "import"
+  ],
 
   "env": {
     "node": true
@@ -17,11 +18,11 @@
     "ecmaVersion": 8
   },
 
-	"rules": {
-		"no-restricted-syntax": [
-			"error",
-			"LabeledStatement",
-			"WithStatement"
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      "LabeledStatement",
+      "WithStatement"
     ],
     "import/no-extraneous-dependencies": "off",
     "no-await-in-loop": "warn",
