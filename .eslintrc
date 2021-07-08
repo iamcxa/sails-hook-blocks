@@ -1,5 +1,4 @@
 {
-  "parser": "babel-eslint",
   "extends": [
     "airbnb-base",
     ".eslintrc-sails",
@@ -11,8 +10,11 @@
   ],
 
   "env": {
-    "node": true
+    "node": true,
+    "mocha": true
   },
+
+  "parser": "babel-eslint",
 
   "parserOptions": {
     "ecmaVersion": 8
