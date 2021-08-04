@@ -1,0 +1,8 @@
+node_modules/**
+migrations/**
+coverage/**
+scripts/**
+devpod/**
+charts/**
+assets/**
+views/**
