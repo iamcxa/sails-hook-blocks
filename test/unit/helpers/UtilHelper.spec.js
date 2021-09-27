@@ -1,4 +1,4 @@
-import faker from 'faker';
+const faker = require('faker');
 
 describe('about UtilHelper operations.', () => {
   it('UtilHelper decodeAndParseParams Array should success.', async () => {

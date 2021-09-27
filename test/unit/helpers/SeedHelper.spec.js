@@ -1,4 +1,4 @@
-import faker from 'faker';
+const faker = require('faker');
 
 describe('about SeedHelper operations.', () => {
   it('SeedHelper create should success.', async () => {

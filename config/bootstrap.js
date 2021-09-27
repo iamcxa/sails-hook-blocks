@@ -9,7 +9,7 @@
  * For more information on bootstrapping your app, check out:
  * https://sailsjs.com/config/bootstrap
  */
-import _ from 'lodash';
+const _ = require('lodash');
 
 const util = require('util');
 

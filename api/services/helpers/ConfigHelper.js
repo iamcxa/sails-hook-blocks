@@ -4,10 +4,9 @@
  * version: 20180301
  * lastUpdater: Kent
  */
-import _ from 'lodash';
-import { convert } from 'flattenjs';
-import fs from 'fs';
-// import appRootPath from 'app-root-path';
+const _ = require('lodash');
+const { convert } = require('flattenjs');
+const fs = require('fs');
 
 const appRootPath = sails.config.appPath;
 const configProdPath = 'config/env/production';

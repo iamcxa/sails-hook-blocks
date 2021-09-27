@@ -29,8 +29,8 @@ npm install sails-hook-swagger-ui
 - Setup the swagger json file path
 
 ```javascript
-import path from 'path';
-import swagger from './swagger.json'; // import or require yor swagge here
+const path = require('path');
+const swagger = require('./swagger.json'); // import or require yor swagge here
 
 module.exports = function (sails) {
     var loader = require('sails-util-micro-apps')(sails);

@@ -9,9 +9,9 @@
  * For more information on the Sails logger, check out:
  * http://sailsjs.org/#!/documentation/concepts/Logging
  */
-import util from 'util';
-import colors from 'colors';
-import tracer from 'tracer';
+const util = require('util');
+const colors = require('colors');
+const tracer = require('tracer');
 
 module.exports.log = {
   /** *************************************************************************

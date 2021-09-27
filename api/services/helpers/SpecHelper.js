@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import _ from 'lodash';
-import sinon from 'sinon';
+const _ = require('lodash');
+const sinon = require('sinon');
 
 let mock = null;
 let mockIsAdmin = null;
