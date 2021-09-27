@@ -1,5 +1,5 @@
 /* eslint no-unused-expressions: 0 */
-import faker from 'faker';
+const faker = require('faker');
 
 faker.seed(parseInt(Math.random().toString().split('.').pop(), 10));
 

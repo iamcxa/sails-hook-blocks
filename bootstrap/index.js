@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-export default async function init({
+module.exports = async function init({
   isDevMode = sails.config.environment === 'development',
   isProdMode = sails.config.environment === 'production',
   isInitSeedData = true,

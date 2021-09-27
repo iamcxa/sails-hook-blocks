@@ -1,8 +1,8 @@
 /* eslint-disable no-continue */
-import _ from 'lodash';
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
-import passport from 'passport';
+const _ = require('lodash');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 const AuthService = {
 

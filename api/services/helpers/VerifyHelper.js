@@ -1,7 +1,7 @@
-import Joi from 'joi';
-import Validator from 'validator';
-import _ from 'lodash';
-import jsonValidator from './lib/jsonValidator';
+const Joi = require('joi');
+const Validator = require('validator');
+const _ = require('lodash');
+const jsonValidator = require('./lib/jsonValidator');
 
 const vAllowSymbol = (payload, symbols) => {
   const rule = `^[${symbols.reduce((f, r) => `${f}${r}`)}]*$`;

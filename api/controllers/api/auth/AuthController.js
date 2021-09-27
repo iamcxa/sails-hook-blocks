@@ -5,7 +5,7 @@
  * should look. It currently includes the minimum amount of functionality for
  * the basics of Passport.js to work.
  */
-import _ from 'lodash';
+const _ = require('lodash');
 
 const message = 'success';
 

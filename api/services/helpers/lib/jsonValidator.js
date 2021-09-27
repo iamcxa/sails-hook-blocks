@@ -1,6 +1,6 @@
 /** @module jsonValidator */
 
-import Validator from 'validator';
+const Validator = require('validator');
 
 const jsonValidator = {
   /**
@@ -83,4 +83,4 @@ const jsonValidator = {
   },
 };
 
-export default jsonValidator;
+module.exports = jsonValidator;

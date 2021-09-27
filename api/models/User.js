@@ -1,5 +1,5 @@
-import moment from 'moment-timezone';
-import timezone from 'compact-timezone-list';
+const moment = require('moment-timezone');
+const timezone = require('compact-timezone-list');
 
 module.exports = {
   attributes: {

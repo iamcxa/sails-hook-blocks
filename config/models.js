@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-import shortid from 'shortid';
-import { isEmpty } from 'lodash';
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const shortid = require('shortid');
+const { isEmpty } = require('lodash');
 
 shortid.characters(
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-',

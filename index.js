@@ -1,5 +1,5 @@
-import Loader from 'sails-util-micro-apps';
-import bootstrap from './bootstrap';
+const Loader = require('sails-util-micro-apps');
+const bootstrap = require('./bootstrap');
 
 module.exports = function (sails) {
   const loader = Loader(sails);

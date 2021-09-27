@@ -1,5 +1,5 @@
 const SpecHelper = require('../../../api/services/helpers/SpecHelper');
-import faker from 'faker';
+const faker = require('faker');
 
 describe('about SpecHelper operations.', () => {
 
