@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const faker = require('faker');
-const timezoneList = require('compact-timezone-list');
+const timezoneList = require('compact-timezone-list').default;
 
 module.exports = {
   /**
