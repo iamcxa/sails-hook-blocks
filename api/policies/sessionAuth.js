@@ -19,7 +19,7 @@ module.exports = async function sessionAuth(req, res, next) {
       const user = await User.findByPk(session.id);
       // console.log('sessionAuth user=>', user);
       if (!user) {
-        return res.forbidden(MESSAGE.ERROR.NO_USER_LOGIN());
+        return res.unAuthorized(MESSAGE.ERROR.NO_USER_LOGIN());
       }
       const verify = AuthHelper.verifyUser(user, req.url);
       sails.log(`user=> "${user.id}", url=> "${req.url}", verify=> "${verify.success}"`);
@@ -42,7 +42,7 @@ module.exports = async function sessionAuth(req, res, next) {
     // User is not allowed
     // (default res.forbidden() behavior can be overridden in `config/403.js`)
     // return res.forbidden('You are not permitted to perform this action.');
-    return res.forbidden(MESSAGE.AUTH.NO_USER_LOGIN());
+    return res.unAuthorized(MESSAGE.AUTH.NO_USER_LOGIN());
   } catch (e) {
     sails.log.error(e);
     return next(e);
