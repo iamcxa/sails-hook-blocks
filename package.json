@@ -72,7 +72,7 @@
     "shortid": "^2.2.13",
     "sinon": "^7.0.0",
     "tracer": "^0.9.1",
-    "validator": "^10.9.0"
+    "validator": "^13.7.0"
   },
   "sails": {
     "isHook": true
